@@ -1,6 +1,6 @@
 # FitnessPlus
 
-A fitness app for a bank of exercises, creating workouts, and diet calculations.d
+A fitness app for a bank of exercises, creating workouts, and diet calculations.
 
 
 ## Compatibility Chart
