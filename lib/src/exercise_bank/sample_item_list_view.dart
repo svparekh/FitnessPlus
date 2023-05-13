@@ -32,12 +32,31 @@ class SampleItemListView extends StatelessWidget {
               Navigator.restorablePushNamed(context, SettingsView.routeName);
             },
           ),
-          MenuDropdown(child: Text('HI'), items: [
+          MenuDropdownCascade(child: Text(''), leadingIcon: true, items: [
             MenuDropdownItem(
               title: Text('data'),
               value: 'data',
+            ),
+            MenuDropdownItem(
+              title: Text('data'),
+              value: 2,
             )
-          ])
+          ]),
+          MenuDropdownMorph(
+            itemStyle: MenuItemStyle(borderRadius: BorderRadius.circular(25)),
+            style: MenuDropdownStyle(borderRadius: BorderRadius.circular(15)),
+            child: Text("Test"),
+            items: [
+              MenuDropdownItem(
+                title: Text('data'),
+                value: 'data',
+              ),
+              MenuDropdownItem(
+                title: Text('data'),
+                value: 2,
+              )
+            ],
+          ),
         ],
       ),
 
