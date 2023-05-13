@@ -1,7 +1,6 @@
 import 'menu/menu.dart';
 import 'menu/menu_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_side_menu/flutter_side_menu.dart';
 
 class NavigatorView extends StatefulWidget {
   const NavigatorView({Key? key, this.page}) : super(key: key);
@@ -13,19 +12,18 @@ class NavigatorView extends StatefulWidget {
 
 class _NavigatorViewState extends State<NavigatorView> {
   int selectedIndex = 0;
-  final MenuFunctionController _menuController =
-      MenuFunctionController(position: MenuPosition.left);
+  final SMenuController _menuController = SMenuController(startSize: 50);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          Menu(
+          SSideMenu(
               controller: _menuController,
               header: Icon(Icons.fluorescent_sharp),
               items: [
-                MenuButtonItem(
+                SMenuItemButton(
                   title: 'Exercise Bank',
                   isSelected: selectedIndex == 0,
                   icon: Icons.home,
@@ -35,7 +33,7 @@ class _NavigatorViewState extends State<NavigatorView> {
                     });
                   },
                 ),
-                MenuButtonItem(
+                SMenuItemButton(
                   title: 'Workout Builder',
                   isSelected: selectedIndex == 1,
                   icon: Icons.fitness_center,
@@ -45,7 +43,7 @@ class _NavigatorViewState extends State<NavigatorView> {
                     });
                   },
                 ),
-                MenuButtonItem(
+                SMenuItemButton(
                   title: 'Diet Planner',
                   isSelected: selectedIndex == 2,
                   icon: Icons.food_bank,
@@ -64,7 +62,7 @@ class _NavigatorViewState extends State<NavigatorView> {
               ),
             ),
           ),
-          Menu(
+          SSideMenu(
             items: [],
             header: Text('Custom view'),
             enableSelector: false,

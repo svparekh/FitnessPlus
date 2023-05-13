@@ -1,84 +1,83 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class MenuItem<T> extends StatefulWidget {
-  const MenuItem({
+import 'menu.dart';
+
+abstract class SMenuItem<T> extends StatelessWidget {
+  const SMenuItem({
     Key? key,
-    this.child,
     this.value,
+    this.style,
   }) : super(key: key);
-  final Widget? child;
   final T? value;
-
-  @override
-  State<MenuItem> createState() => _MenuItemState();
+  final SMenuItemStyle? style;
 }
 
-class _MenuItemState extends State<MenuItem> {
-  @override
-  Widget build(BuildContext context) {
-    return widget.child ?? Container();
-  }
-}
-
-class MenuButtonItem extends MenuItem {
-  const MenuButtonItem({
+class SMenuItemButton<T> extends SMenuItem {
+  const SMenuItemButton({
     Key? key,
+    T? value,
+    SMenuItemStyle? style = const SMenuItemStyle(),
     required this.icon,
+    this.selectedTextColor,
+    this.selectedIconColor,
+    this.textColor,
+    this.iconColor,
     this.title,
     this.isSelected = false,
     required this.onPressed,
-    this.selectedColor = const Color.fromARGB(255, 255, 255, 255),
-    this.selectedIconColor = const Color.fromARGB(255, 33, 150, 243),
-    this.unselectedColor = const Color.fromARGB(255, 255, 255, 255),
-    this.unselectedIconColor = const Color.fromARGB(255, 0, 0, 0),
   })  : assert(isSelected != null),
-        super(key: key);
+        super(key: key, value: value, style: style);
   final IconData icon;
+  final Color? selectedTextColor;
+  final Color? selectedIconColor;
+  final Color? textColor;
+  final Color? iconColor;
   final String? title;
   final bool isSelected;
   final void Function() onPressed;
-  final Color selectedColor;
-  final Color selectedIconColor;
-  final Color unselectedColor;
-  final Color unselectedIconColor;
 
-  @override
-  State<MenuButtonItem> createState() => _MenuButtonItemState();
-}
-
-class _MenuButtonItemState extends State<MenuButtonItem> {
   @override
   Widget build(BuildContext context) {
-    final Widget icon = Padding(
-      padding: const EdgeInsets.only(left: 2),
-      child: Icon(
-        widget.icon,
-        color: widget.isSelected
-            ? widget.selectedIconColor
-            : widget.unselectedIconColor,
-      ),
-    );
     return AnimatedContainer(
       height: 45,
       margin: EdgeInsets.only(top: 5),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(7),
-        color:
-            widget.isSelected ? widget.selectedColor : widget.unselectedColor,
+        color: isSelected
+            ? style?.selectedBgColor ?? Theme.of(context).colorScheme.primary
+            : style?.bgColor ?? Theme.of(context).colorScheme.background,
       ),
       duration: Duration(milliseconds: 250),
       child: TextButton.icon(
         onPressed: () {
-          widget.onPressed();
+          onPressed();
         },
-        icon: icon,
+        icon: Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2),
+            child: Icon(
+              icon,
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedIconColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      iconColor ??
+                      Theme.of(context).colorScheme.primary,
+            ),
+          ),
+        ),
         label: Text(
-          widget.title ?? '',
+          title ?? '',
           style: TextStyle(
-              color: widget.isSelected
-                  ? widget.selectedIconColor
-                  : widget.unselectedIconColor),
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedTextColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      textColor ??
+                      Theme.of(context).colorScheme.primary),
           overflow: TextOverflow.fade,
           maxLines: 1,
           softWrap: false,
@@ -89,30 +88,69 @@ class _MenuButtonItemState extends State<MenuButtonItem> {
 }
 
 // Wrapper for abstract class MenuItem
-class CustomMenuItem extends MenuItem {
-  const CustomMenuItem({super.key, super.child, super.value});
-}
-
-class MenuDropdownItem<T> extends MenuItem {
-  const MenuDropdownItem({
-    Key? super.key,
-    required T super.value,
-    this.leading,
-    this.title,
-    this.trailing,
-  });
-  final Widget? leading;
-  final Widget? title;
-  final Widget? trailing;
+class SMenuItemCustom<T> extends SMenuItem {
+  final Widget? child;
+  const SMenuItemCustom({Key? key, T? value, SMenuItemStyle? style, this.child})
+      : super(
+          key: key,
+          value: value,
+          style: style,
+        );
 
   @override
   Widget build(BuildContext context) {
-    return title ?? Container();
+    return child ?? Container();
   }
 }
 
-class MenuSelectableDropdownItem extends MenuItem {
-  const MenuSelectableDropdownItem({
+class SMenuItemDropdown<T> extends SMenuItem {
+  const SMenuItemDropdown({
+    Key? key,
+    required T value,
+    SMenuItemStyle? style,
+    this.leading,
+    this.title,
+    this.trailing,
+    this.onPressed,
+  }) : super(
+          key: key,
+          value: value,
+          style: style,
+        );
+  final Widget? leading;
+  final Widget? title;
+  final Widget? trailing;
+  final void Function()?
+      onPressed; // Leave null if this item is to be used in onChange of dropdown menu
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: style?.width,
+      height: style?.height,
+      child: Material(
+        shape: style?.shape ??
+            RoundedRectangleBorder(
+                borderRadius: style?.borderRadius ?? BorderRadius.circular(15)),
+        color: style?.bgColor ?? Colors.white,
+        child: Padding(
+          padding: style?.padding ?? const EdgeInsets.all(5.0),
+          child: Row(
+            children: [
+              Flexible(child: leading ?? Container()),
+              Flexible(child: title ?? Container()),
+              Flexible(child: trailing ?? Container())
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SMenuItemDropdownSelectable extends SMenuItem {
+  const SMenuItemDropdownSelectable({
+    this.onPressed,
     Key? key,
     this.leading,
     this.title,
@@ -121,6 +159,7 @@ class MenuSelectableDropdownItem extends MenuItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -129,6 +168,7 @@ class MenuSelectableDropdownItem extends MenuItem {
       margin: EdgeInsets.only(top: 5),
       duration: Duration(milliseconds: 250),
       child: ListTile(
+        onTap: onPressed,
         leading: leading,
         title: title,
         trailing: trailing,
