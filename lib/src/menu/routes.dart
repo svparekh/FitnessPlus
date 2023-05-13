@@ -134,16 +134,19 @@ class BottomUpPageRoute<T> extends PageRoute<T> {
 }
 
 class CustomHero extends StatelessWidget {
+
   const CustomHero(
       {Key? key, this.child = const Material(), this.tag = 0, this.color})
       : super(key: key);
   final Widget child;
-  final Color? color;
+
   final Object tag;
   @override
   Widget build(BuildContext context) {
     return Material(
+
       color: color ?? Colors.transparent,
+
       child: Hero(
         tag: tag,
         child: child,
@@ -174,6 +177,7 @@ class CustomRectTween extends RectTween {
   }
 }
 
+
 class SPopupMenuRoute<T> extends PageRoute<T> {
   /// {@macro hero_dialog_route}
   SPopupMenuRoute(
@@ -191,21 +195,26 @@ class SPopupMenuRoute<T> extends PageRoute<T> {
   final Color? bgColor;
   final bool? dismissable;
 
+
   @override
   bool get opaque => false;
 
   @override
+
   bool get barrierDismissible => dismissable ?? true;
 
   @override
   Duration get transitionDuration =>
       animDuration ?? const Duration(milliseconds: 500);
 
+
   @override
   bool get maintainState => true;
 
   @override
+
   Color get barrierColor => bgColor ?? Colors.black12;
+
 
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,

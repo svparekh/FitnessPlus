@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -10,7 +11,9 @@ class SMenuSize {
   static const double menuWidthOpen = 250;
 }
 
+
 enum SDropdownMenuAlignment {
+
   topLeft,
   topCenter,
   topRight,
@@ -22,9 +25,13 @@ enum SDropdownMenuAlignment {
   bottomRight
 }
 
+enum MenuState { open, closed }
+
+
 enum SMenuState { open, closed }
 
 enum SSideMenuPosition { top, bottom, left, right }
+
 
 class SSideMenuStyle {
   final BorderRadius? borderRadius;
@@ -45,6 +52,7 @@ class SSideMenuStyle {
 }
 
 class SMenuItemStyle {
+
   final MainAxisAlignment? mainAxisAlignment;
   final BorderRadius? borderRadius;
   final OutlinedBorder? shape;
@@ -58,14 +66,18 @@ class SMenuItemStyle {
   final Color? bgColor;
   final Color? selectedBgColor;
 
+
   const SMenuItemStyle({
+
     this.borderRadius,
     this.selectedAccentColor,
     this.selectedBgColor,
     this.accentColor,
     this.bgColor,
+
     this.mainAxisAlignment,
     this.constraints,
+
     this.height,
     this.width,
     this.elevation,
@@ -74,13 +86,17 @@ class SMenuItemStyle {
   });
 }
 
+
 class SDropdownMenuStyle {
+
   final BorderRadius? borderRadius;
   final double? elevation;
   final Color? color;
   final EdgeInsets? padding;
   final BoxConstraints? constraints;
+
   final SDropdownMenuAlignment? alignment;
+
 
   /// position of the top left of the dropdown relative to the top left of the button
   final Offset? offset;
@@ -88,6 +104,7 @@ class SDropdownMenuStyle {
   ///button width must be set for this to take effect
   final double width;
   final double? height;
+
 
   const SDropdownMenuStyle({
     this.alignment = SDropdownMenuAlignment.bottomCenter,
@@ -97,6 +114,7 @@ class SDropdownMenuStyle {
     this.height,
     this.elevation,
     this.color,
+
     this.padding,
     this.borderRadius,
   });
@@ -120,6 +138,7 @@ class SSideMenu extends StatefulWidget {
     this.header,
     this.footer,
     this.controller,
+
     this.enableSelector = true,
     this.style = const SSideMenuStyle(),
   }) : super(key: key);
@@ -128,6 +147,7 @@ class SSideMenu extends StatefulWidget {
   final List<SMenuItem> items;
   final Widget? header;
   final Widget? footer;
+
   final bool enableSelector;
 
   @override
@@ -224,11 +244,13 @@ class _SSideMenuState extends State<SSideMenu> {
       alignment: align,
       children: [
         AnimatedContainer(
+
           decoration: BoxDecoration(
               color: widget.style?.backgroundColor ??
                   Theme.of(context).colorScheme.background,
               borderRadius: widget.style?.borderRadius),
           padding: widget.style?.padding ?? EdgeInsets.symmetric(horizontal: 5),
+
           duration: Duration(milliseconds: 250),
           constraints: widget.style?.constraints ??
               (((widget.style?.position == SSideMenuPosition.top) ||
@@ -251,8 +273,10 @@ class _SSideMenuState extends State<SSideMenu> {
                     widget.header ?? Container(),
                     Stack(
                       children: [
+
                         Column(
                           children: widget.items,
+
                         ),
                         // Moving bar to indicate page number
                         if (widget.enableSelector && widget.items.isNotEmpty)
@@ -295,7 +319,9 @@ class _SSideMenuState extends State<SSideMenu> {
   }
 }
 
+
 abstract class SDropdownMenu<T> extends StatefulWidget {
+
   /// the child widget for the button, this will be ignored if text is supplied
   final Widget? child;
   final SMenuController? controller;
@@ -308,6 +334,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
   final void Function(T value, int index)? onChange;
 
   /// list of DropdownItems
+
   final SDropdownMenuStyle? style;
 
   /// dropdown button icon defaults to caret
@@ -316,6 +343,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
 
   /// if true the dropdown icon will as a leading icon, default to false
   final bool? leadingIcon;
+
 
   //
   final bool? showSelected;
@@ -327,6 +355,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
     this.hideIcon = false,
     this.child,
     required this.items,
+
     this.style = const SDropdownMenuStyle(),
     this.icon,
     this.leadingIcon = false,
@@ -521,6 +550,7 @@ class SDropdownMenuCascade<T> extends SDropdownMenu<T> {
 class _SDropdownMenuCascadeState<T>
     extends SDropdownMenuState<SDropdownMenuCascade<T>>
     with TickerProviderStateMixin {
+
   bool? _isSmall;
   OverlayEntry? _overlayEntry;
   int _currentIndex = -1;
@@ -595,6 +625,7 @@ class _SDropdownMenuCascadeState<T>
   @override
   void dispose() {
     _animationController?.dispose();
+
     _overlayEntry?.remove();
     _overlayEntry?.dispose();
     super.dispose();
@@ -603,6 +634,7 @@ class _SDropdownMenuCascadeState<T>
   @override
   Widget build(BuildContext context) {
     var style = widget.buttonStyle;
+
     // must change this class so width is reflected in controller size
     controller.size.value = 50;
 
@@ -637,10 +669,12 @@ class _SDropdownMenuCascadeState<T>
               if ((!(widget.showSelected ?? false) || (_currentIndex == -1)) &&
                   (widget.child != null)) ...[
                 Flexible(child: widget.child!),
+
               ] else ...[
                 if (widget.showSelected ?? false)
                   Flexible(child: widget.items[_currentIndex]),
               ],
+
             if (widget.hideIcon != null && !widget.hideIcon!)
               Flexible(
                 child: RotationTransition(
@@ -657,6 +691,7 @@ class _SDropdownMenuCascadeState<T>
   OverlayEntry _createOverlayEntry() {
     // find the size and position of the current widget
     Offset position = calcPopupPosition(context);
+
 
     var topOffset = position.dy;
     var leftOffset = position.dx;
@@ -675,6 +710,7 @@ class _SDropdownMenuCascadeState<T>
               Positioned(
                 left: leftOffset,
                 top: topOffset,
+
                 width: widget.style?.width ?? 250,
                 child: Material(
                   elevation: widget.style?.elevation ?? 0,
@@ -720,6 +756,7 @@ class _SDropdownMenuCascadeState<T>
     );
   }
 }
+
 
 class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
   const SDropdownMenuMorph({
@@ -817,6 +854,7 @@ class _SDropdownMenuMorphState<T>
   void initState() {
     if (widget.controller != null) {
       controller = widget.controller!;
+
     }
 
     controller.open = _openMenu;
@@ -951,6 +989,245 @@ class _SDropdownMenuPopup<T> extends StatelessWidget {
                     );
                   }).toList(),
                 ),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class MenuDropdownMorph<T> extends MenuDropdown {
+  // /// the child widget for the button, this will be ignored if text is supplied
+  // final Widget child;
+  // final MenuFunctionController? controller;
+  // final List<MenuItem<T>> items;
+  // final Widget? header;
+  // final Widget? footer;
+
+  // /// onChange is called when the selected option is changed.;
+  // /// It will pass back the value and the index of the option.
+  // final void Function(T, int)? onChange;
+
+  // /// list of DropdownItems
+  // final DropdownStyle dropdownStyle;
+
+  // /// dropdownButtonStyles passes styles to OutlineButton.styleFrom()
+  // final DropdownButtonStyle dropdownButtonStyle;
+
+  // /// dropdown button icon defaults to caret
+  // final Icon? icon;
+  // final bool hideIcon;
+
+  // /// if true the dropdown icon will as a leading icon, default to false
+  // final bool leadingIcon;
+  const MenuDropdownMorph({
+    this.itemStyle,
+    final Key? key,
+    final bool? hideIcon = false,
+    required Widget child,
+    required List<MenuItem<T>> items,
+    final MenuDropdownStyle? style = const MenuDropdownStyle(),
+    final Icon? icon,
+    final bool? leadingIcon = false,
+    final void Function(dynamic, int)? onChange,
+    final MenuFunctionController? controller,
+    final Widget? header,
+    final Widget? footer,
+  }) : super(
+            key: key,
+            hideIcon: hideIcon,
+            child: child,
+            items: items,
+            style: style,
+            icon: icon,
+            leadingIcon: leadingIcon,
+            onChange: onChange,
+            controller: controller,
+            header: header,
+            footer: footer);
+  final MenuItemStyle? itemStyle;
+  @override
+  State<MenuDropdownMorph<T>> createState() => _MenuDropdownMorphState<T>();
+}
+
+class _MenuDropdownMorphState<T> extends State<MenuDropdownMorph<T>>
+    with TickerProviderStateMixin {
+  int selectedIndex = 0;
+  MenuFunctionController controller = MenuFunctionController();
+  GlobalKey renderKey = GlobalKey();
+
+  void _openMenu() {
+    setState(() {
+      controller.size.value = MenuSize.menuWidthOpen;
+      controller.state.value = MenuState.open;
+    });
+  }
+
+  void _closeMenu() {
+    setState(() {
+      controller.size.value = MenuSize.menuWidthClosed;
+      controller.state.value = MenuState.closed;
+    });
+  }
+
+  void _toggleMenu() {
+    if (controller.size.value > MenuSize.menuWidthClosed) {
+      _closeMenu();
+    } else {
+      _openMenu();
+    }
+  }
+
+  @override
+  void initState() {
+    if (widget.controller != null) {
+      controller = widget.controller!;
+    }
+
+    controller.open = _openMenu;
+    controller.close = _closeMenu;
+    controller.toggle = _toggleMenu;
+
+    controller.size.addListener(() {
+      setState(() {});
+    });
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomHero(
+      tag: 0,
+      child: Container(
+        decoration: BoxDecoration(
+            color: widget.itemStyle?.bgColor ??
+                Theme.of(context).colorScheme.background,
+            borderRadius: widget.style?.borderRadius),
+        child: SizedBox(
+          width: 50,
+          height: 50,
+          child: TextButton(
+            key: renderKey,
+            child: Text('^'),
+            onPressed: () {
+              Navigator.push(context, TaskDialogRoute(
+                builder: (context) {
+                  return _MenuPopup(
+                    position: calcPopupPosition(),
+                    tag: 0,
+                    items: widget.items,
+                    style: widget.style,
+                    controller: widget.controller,
+                    header: widget.header,
+                    footer: widget.footer,
+                  );
+                },
+              ));
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Offset calcPopupPosition() {
+    var renderBox = renderKey.currentContext?.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var windowSize = MediaQuery.of(context).size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+    double topOffset;
+    double leftOffset;
+
+    switch (widget.style?.alignment) {
+      case MenuAlignment.topLeft:
+        break;
+      case MenuAlignment.topCenter:
+        break;
+      case MenuAlignment.topRight:
+        break;
+      case MenuAlignment.centerLeft:
+        break;
+      case MenuAlignment.center:
+        break;
+      case MenuAlignment.centerRight:
+        break;
+      case MenuAlignment.bottomLeft:
+        break;
+      case MenuAlignment.bottomCenter:
+        break;
+      case MenuAlignment.bottomRight:
+      default:
+        // default is bottom right
+
+        break;
+    }
+
+    if (windowSize.height <
+        (offset.dy + size.height + (widget.style?.height ?? 250))) {
+      topOffset = offset.dy - size.height - (widget.style?.height ?? 250);
+    } else {
+      topOffset = offset.dy + size.height;
+    }
+    if ((0 - (offset.dx + size.width + (widget.style?.width ?? 150))) < 0) {
+      leftOffset = offset.dx - size.width - (widget.style?.width ?? 150);
+    } else {
+      leftOffset = offset.dx - size.width + (widget.style?.width ?? 150);
+    }
+    return Offset(leftOffset, topOffset);
+  }
+}
+
+class _MenuPopup<T> extends StatelessWidget {
+  final Object tag;
+  final List<MenuItem<T>> items;
+  final MenuDropdownStyle? style;
+  final MenuItemStyle? itemStyle;
+  final MenuFunctionController? controller;
+  final Widget? header;
+  final Widget? footer;
+  final Offset position;
+  const _MenuPopup(
+      {Key? key,
+      required this.tag,
+      required this.items,
+      this.controller,
+      this.header,
+      this.footer,
+      this.itemStyle = const MenuItemStyle(),
+      this.style = const MenuDropdownStyle(),
+      required this.position})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(
+          left: position.dx,
+          top: position.dy,
+          width: style?.width ?? 250,
+          child: CustomHero(
+            tag: tag,
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: style?.borderRadius,
+                  color: style?.color ?? Colors.white),
+              constraints: style?.constraints ??
+                  BoxConstraints(
+                      maxHeight: style?.height ?? 350,
+                      maxWidth: 250,
+                      minHeight: style?.height ?? 10),
+              child: Column(
+                children: [
+                  ListView(
+                    padding: style?.padding ?? EdgeInsets.zero,
+                    shrinkWrap: true,
+                    children: items,
+                  ),
+                ],
               ),
             ),
           ),

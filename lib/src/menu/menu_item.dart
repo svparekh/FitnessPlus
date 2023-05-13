@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 
 import 'menu.dart';
 
+
 abstract class SMenuItem<T> extends StatelessWidget {
   const SMenuItem({
     Key? key,
@@ -10,6 +11,7 @@ abstract class SMenuItem<T> extends StatelessWidget {
     this.style,
   }) : super(key: key);
   final T? value;
+
   final SMenuItemStyle? style;
 }
 
@@ -53,6 +55,8 @@ class SMenuItemButton<T> extends SMenuItem {
         onPressed: () {
           onPressed();
         },
+
+
         icon: Flexible(
           child: Padding(
             padding: const EdgeInsets.only(left: 2),
@@ -88,9 +92,11 @@ class SMenuItemButton<T> extends SMenuItem {
 }
 
 // Wrapper for abstract class MenuItem
+
 class SMenuItemCustom<T> extends SMenuItem {
   final Widget? child;
   const SMenuItemCustom({Key? key, T? value, SMenuItemStyle? style, this.child})
+
       : super(
           key: key,
           value: value,
@@ -103,6 +109,7 @@ class SMenuItemCustom<T> extends SMenuItem {
   }
 }
 
+
 class SMenuItemDropdown<T> extends SMenuItem {
   const SMenuItemDropdown({
     Key? key,
@@ -112,6 +119,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
     this.title,
     this.trailing,
     this.onPressed,
+
   }) : super(
           key: key,
           value: value,
@@ -125,6 +133,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
 
   @override
   Widget build(BuildContext context) {
+
     return SizedBox(
       width: style?.width,
       height: style?.height,
@@ -144,6 +153,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
           ),
         ),
       ),
+
     );
   }
 }
