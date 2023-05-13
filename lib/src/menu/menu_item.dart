@@ -3,21 +3,23 @@ import 'package:flutter/widgets.dart';
 
 import 'menu.dart';
 
-abstract class MenuItem<T> extends StatelessWidget {
-  const MenuItem({
+
+abstract class SMenuItem<T> extends StatelessWidget {
+  const SMenuItem({
     Key? key,
     this.value,
     this.style,
   }) : super(key: key);
   final T? value;
-  final MenuItemStyle? style;
+
+  final SMenuItemStyle? style;
 }
 
-class MenuButtonItem<T> extends MenuItem {
-  const MenuButtonItem({
+class SMenuItemButton<T> extends SMenuItem {
+  const SMenuItemButton({
     Key? key,
     T? value,
-    MenuItemStyle? style = const MenuItemStyle(),
+    SMenuItemStyle? style = const SMenuItemStyle(),
     required this.icon,
     this.selectedTextColor,
     this.selectedIconColor,
@@ -53,17 +55,21 @@ class MenuButtonItem<T> extends MenuItem {
         onPressed: () {
           onPressed();
         },
-        icon: Padding(
-          padding: const EdgeInsets.only(left: 2),
-          child: Icon(
-            icon,
-            color: isSelected
-                ? style?.selectedAccentColor ??
-                    selectedIconColor ??
-                    Theme.of(context).colorScheme.onPrimary
-                : style?.accentColor ??
-                    iconColor ??
-                    Theme.of(context).colorScheme.primary,
+
+
+        icon: Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2),
+            child: Icon(
+              icon,
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedIconColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      iconColor ??
+                      Theme.of(context).colorScheme.primary,
+            ),
           ),
         ),
         label: Text(
@@ -86,9 +92,11 @@ class MenuButtonItem<T> extends MenuItem {
 }
 
 // Wrapper for abstract class MenuItem
-class CustomMenuItem<T> extends MenuItem {
+
+class SMenuItemCustom<T> extends SMenuItem {
   final Widget? child;
-  const CustomMenuItem({Key? key, T? value, MenuItemStyle? style, this.child})
+  const SMenuItemCustom({Key? key, T? value, SMenuItemStyle? style, this.child})
+
       : super(
           key: key,
           value: value,
@@ -101,14 +109,17 @@ class CustomMenuItem<T> extends MenuItem {
   }
 }
 
-class MenuDropdownItem<T> extends MenuItem {
-  const MenuDropdownItem({
+
+class SMenuItemDropdown<T> extends SMenuItem {
+  const SMenuItemDropdown({
     Key? key,
     required T value,
-    MenuItemStyle? style,
+    SMenuItemStyle? style,
     this.leading,
     this.title,
     this.trailing,
+    this.onPressed,
+
   }) : super(
           key: key,
           value: value,
@@ -117,20 +128,39 @@ class MenuDropdownItem<T> extends MenuItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
+  final void Function()?
+      onPressed; // Leave null if this item is to be used in onChange of dropdown menu
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: style?.bgColor,
-      leading: leading,
-      title: title,
-      trailing: trailing,
+
+    return SizedBox(
+      width: style?.width,
+      height: style?.height,
+      child: Material(
+        shape: style?.shape ??
+            RoundedRectangleBorder(
+                borderRadius: style?.borderRadius ?? BorderRadius.circular(15)),
+        color: style?.bgColor ?? Colors.white,
+        child: Padding(
+          padding: style?.padding ?? const EdgeInsets.all(5.0),
+          child: Row(
+            children: [
+              Flexible(child: leading ?? Container()),
+              Flexible(child: title ?? Container()),
+              Flexible(child: trailing ?? Container())
+            ],
+          ),
+        ),
+      ),
+
     );
   }
 }
 
-class MenuSelectableDropdownItem extends MenuItem {
-  const MenuSelectableDropdownItem({
+class SMenuItemDropdownSelectable extends SMenuItem {
+  const SMenuItemDropdownSelectable({
+    this.onPressed,
     Key? key,
     this.leading,
     this.title,
@@ -139,6 +169,7 @@ class MenuSelectableDropdownItem extends MenuItem {
   final Widget? leading;
   final Widget? title;
   final Widget? trailing;
+  final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +178,7 @@ class MenuSelectableDropdownItem extends MenuItem {
       margin: EdgeInsets.only(top: 5),
       duration: Duration(milliseconds: 250),
       child: ListTile(
+        onTap: onPressed,
         leading: leading,
         title: title,
         trailing: trailing,
