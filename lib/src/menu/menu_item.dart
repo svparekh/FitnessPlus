@@ -48,7 +48,7 @@ class SMenuItemButton<T> extends SMenuItem {
         borderRadius: style?.borderRadius ?? BorderRadius.circular(7),
         color: isSelected
             ? style?.selectedBgColor ?? Theme.of(context).colorScheme.primary
-            : style?.bgColor ?? Theme.of(context).colorScheme.background,
+            : style?.bgColor ?? Theme.of(context).colorScheme.onPrimary,
       ),
       duration: Duration(milliseconds: 250),
       child: TextButton(

@@ -248,7 +248,7 @@ class _SSideMenuState extends State<SSideMenu> {
           child: AnimatedContainer(
             decoration: BoxDecoration(
                 color: widget.style?.backgroundColor ??
-                    Theme.of(context).colorScheme.background,
+                    Theme.of(context).colorScheme.onPrimary,
                 borderRadius: widget.style?.borderRadius),
             padding: widget.style?.padding ??
                 const EdgeInsets.symmetric(horizontal: 5),
@@ -635,7 +635,7 @@ class _SDropdownMenuCascadeState<T>
         style: OutlinedButton.styleFrom(
           padding: style?.padding ?? const EdgeInsets.all(0),
           backgroundColor:
-              style?.bgColor ?? Theme.of(context).colorScheme.background,
+              style?.bgColor ?? Theme.of(context).colorScheme.onPrimary,
           elevation: style?.elevation,
           foregroundColor: style?.accentColor,
           shape: style?.shape ??
@@ -701,7 +701,7 @@ class _SDropdownMenuCascadeState<T>
                   borderRadius:
                       widget.style?.borderRadius ?? BorderRadius.circular(15),
                   color: widget.style?.color ??
-                      Theme.of(context).colorScheme.background,
+                      Theme.of(context).colorScheme.onPrimary,
                   child: SizeTransition(
                     axisAlignment: 1,
                     sizeFactor: _expandAnimation!,
@@ -873,7 +873,7 @@ class _SDropdownMenuMorphState<T>
             style: OutlinedButton.styleFrom(
               padding: widget.itemStyle?.padding ?? const EdgeInsets.all(0),
               backgroundColor: widget.itemStyle?.bgColor ??
-                  Theme.of(context).colorScheme.background,
+                  Theme.of(context).colorScheme.onPrimary,
               elevation: widget.itemStyle?.elevation,
               foregroundColor: widget.itemStyle?.accentColor,
               shape: widget.itemStyle?.shape ??
