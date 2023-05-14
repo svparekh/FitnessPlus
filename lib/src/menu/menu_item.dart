@@ -12,6 +12,7 @@ abstract class SMenuItem<T> extends StatelessWidget {
     this.style,
   }) : super(key: key);
   final T? value;
+
   final SMenuItemStyle? style;
 }
 
@@ -53,44 +54,37 @@ class SMenuItemButton<T> extends SMenuItem {
             : style?.bgColor ?? Theme.of(context).colorScheme.onBackground,
       ),
       duration: Duration(milliseconds: 250),
-      child: TextButton(
+      child: TextButton.icon(
         onLongPress: onLongPress,
         onPressed: onPressed,
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Icon(
-                icon,
-                color: isSelected
-                    ? style?.selectedAccentColor ??
-                        selectedIconColor ??
-                        Theme.of(context).colorScheme.onPrimary
-                    : style?.accentColor ??
-                        iconColor ??
-                        Theme.of(context).colorScheme.primary,
-              ),
+        icon: Flexible(
+          child: Padding(
+            padding: const EdgeInsets.only(left: 2),
+            child: Icon(
+              icon,
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedIconColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      iconColor ??
+                      Theme.of(context).colorScheme.primary,
             ),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 5),
-                child: Text(
-                  title ?? '',
-                  style: TextStyle(
-                      color: isSelected
-                          ? style?.selectedAccentColor ??
-                              selectedTextColor ??
-                              Theme.of(context).colorScheme.onPrimary
-                          : style?.accentColor ??
-                              textColor ??
-                              Theme.of(context).colorScheme.primary),
-                  overflow: TextOverflow.fade,
-                  maxLines: 1,
-                  softWrap: false,
-                ),
-              ),
-            ),
-          ],
+          ),
+        ),
+        label: Text(
+          title ?? '',
+          style: TextStyle(
+              color: isSelected
+                  ? style?.selectedAccentColor ??
+                      selectedTextColor ??
+                      Theme.of(context).colorScheme.onPrimary
+                  : style?.accentColor ??
+                      textColor ??
+                      Theme.of(context).colorScheme.primary),
+          overflow: TextOverflow.fade,
+          maxLines: 1,
+          softWrap: false,
         ),
       ),
     );
@@ -98,6 +92,7 @@ class SMenuItemButton<T> extends SMenuItem {
 }
 
 // Wrapper for abstract class MenuItem
+
 class SMenuItemCustom<T> extends SMenuItem {
   final Widget? child;
   final Widget Function(

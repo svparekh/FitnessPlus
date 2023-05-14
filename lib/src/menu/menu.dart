@@ -22,6 +22,8 @@ enum SDropdownMenuAlignment {
   bottomRight
 }
 
+enum MenuState { open, closed }
+
 enum SMenuState { open, closed }
 
 enum SSideMenuPosition { top, bottom, left, right }
@@ -80,6 +82,7 @@ class SDropdownMenuStyle {
   final Color? color;
   final EdgeInsets? padding;
   final BoxConstraints? constraints;
+
   final SDropdownMenuAlignment? alignment;
 
   /// position of the top left of the dropdown relative to the top left of the button
@@ -342,6 +345,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
   final void Function(T value, int index)? onChange;
 
   /// list of DropdownItems
+
   final SDropdownMenuStyle? style;
 
   /// dropdown button icon defaults to caret
@@ -613,6 +617,7 @@ class _SDropdownMenuCascadeState<T>
   @override
   void dispose() {
     _animationController?.dispose();
+
     _overlayEntry?.remove();
     _overlayEntry?.dispose();
     super.dispose();
@@ -621,6 +626,7 @@ class _SDropdownMenuCascadeState<T>
   @override
   Widget build(BuildContext context) {
     var style = widget.buttonStyle;
+
     // must change this class so width is reflected in controller size
     controller.size.value = 50;
 
