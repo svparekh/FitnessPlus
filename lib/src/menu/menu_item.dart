@@ -12,25 +12,23 @@ abstract class SMenuItem<T> extends StatelessWidget {
     this.style,
   }) : super(key: key);
   final T? value;
-
   final SMenuItemStyle? style;
 }
 
 class SMenuItemButton<T> extends SMenuItem {
-  const SMenuItemButton(
-      {Key? key,
-      T? value,
-      SMenuItemStyle? style = const SMenuItemStyle(),
-      required this.icon,
-      this.selectedTextColor,
-      this.selectedIconColor,
-      this.textColor,
-      this.iconColor,
-      this.title,
-      this.isSelected = false,
-      this.onPressed,
-      this.onLongPress})
-      : assert(isSelected != null),
+  const SMenuItemButton({
+    Key? key,
+    T? value,
+    SMenuItemStyle? style = const SMenuItemStyle(),
+    required this.icon,
+    this.selectedTextColor,
+    this.selectedIconColor,
+    this.textColor,
+    this.iconColor,
+    this.title,
+    this.isSelected = false,
+    this.onPressed,
+  })  : assert(isSelected != null),
         super(key: key, value: value, style: style);
   final IconData icon;
   final Color? selectedTextColor;
@@ -40,7 +38,6 @@ class SMenuItemButton<T> extends SMenuItem {
   final String? title;
   final bool isSelected;
   final void Function()? onPressed;
-  final void Function()? onLongPress;
 
   @override
   Widget build(BuildContext context) {
@@ -51,40 +48,46 @@ class SMenuItemButton<T> extends SMenuItem {
         borderRadius: style?.borderRadius ?? BorderRadius.circular(7),
         color: isSelected
             ? style?.selectedBgColor ?? Theme.of(context).colorScheme.primary
-            : style?.bgColor ?? Theme.of(context).colorScheme.onBackground,
+            : style?.bgColor ?? Theme.of(context).colorScheme.background,
       ),
       duration: Duration(milliseconds: 250),
-      child: TextButton.icon(
-        onLongPress: onLongPress,
+      child: TextButton(
         onPressed: onPressed,
-        icon: Flexible(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 2),
-            child: Icon(
-              icon,
-              color: isSelected
-                  ? style?.selectedAccentColor ??
-                      selectedIconColor ??
-                      Theme.of(context).colorScheme.onPrimary
-                  : style?.accentColor ??
-                      iconColor ??
-                      Theme.of(context).colorScheme.primary,
+        child: Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Icon(
+                icon,
+                color: isSelected
+                    ? style?.selectedAccentColor ??
+                        selectedIconColor ??
+                        Theme.of(context).colorScheme.onPrimary
+                    : style?.accentColor ??
+                        iconColor ??
+                        Theme.of(context).colorScheme.primary,
+              ),
             ),
-          ),
-        ),
-        label: Text(
-          title ?? '',
-          style: TextStyle(
-              color: isSelected
-                  ? style?.selectedAccentColor ??
-                      selectedTextColor ??
-                      Theme.of(context).colorScheme.onPrimary
-                  : style?.accentColor ??
-                      textColor ??
-                      Theme.of(context).colorScheme.primary),
-          overflow: TextOverflow.fade,
-          maxLines: 1,
-          softWrap: false,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 5),
+                child: Text(
+                  title ?? '',
+                  style: TextStyle(
+                      color: isSelected
+                          ? style?.selectedAccentColor ??
+                              selectedTextColor ??
+                              Theme.of(context).colorScheme.onPrimary
+                          : style?.accentColor ??
+                              textColor ??
+                              Theme.of(context).colorScheme.primary),
+                  overflow: TextOverflow.fade,
+                  maxLines: 1,
+                  softWrap: false,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -92,7 +95,6 @@ class SMenuItemButton<T> extends SMenuItem {
 }
 
 // Wrapper for abstract class MenuItem
-
 class SMenuItemCustom<T> extends SMenuItem {
   final Widget? child;
   final Widget Function(
@@ -146,7 +148,7 @@ class SMenuItemDropdown<T> extends SMenuItem {
         shape: style?.shape ??
             RoundedRectangleBorder(
                 borderRadius: style?.borderRadius ?? BorderRadius.circular(15)),
-        color: style?.bgColor ?? Theme.of(context).colorScheme.onBackground,
+        color: style?.bgColor ?? Colors.white,
         child: Padding(
           padding: style?.padding ?? const EdgeInsets.all(5.0),
           child: Row(
@@ -157,6 +159,35 @@ class SMenuItemDropdown<T> extends SMenuItem {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SMenuItemDropdownSelectable extends SMenuItem {
+  const SMenuItemDropdownSelectable({
+    this.onPressed,
+    Key? key,
+    this.leading,
+    this.title,
+    this.trailing,
+  }) : super(key: key);
+  final Widget? leading;
+  final Widget? title;
+  final Widget? trailing;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      height: 40,
+      margin: EdgeInsets.only(top: 5),
+      duration: Duration(milliseconds: 250),
+      child: ListTile(
+        onTap: onPressed,
+        leading: leading,
+        title: title,
+        trailing: trailing,
       ),
     );
   }

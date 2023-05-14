@@ -22,8 +22,6 @@ enum SDropdownMenuAlignment {
   bottomRight
 }
 
-enum MenuState { open, closed }
-
 enum SMenuState { open, closed }
 
 enum SSideMenuPosition { top, bottom, left, right }
@@ -82,7 +80,6 @@ class SDropdownMenuStyle {
   final Color? color;
   final EdgeInsets? padding;
   final BoxConstraints? constraints;
-
   final SDropdownMenuAlignment? alignment;
 
   /// position of the top left of the dropdown relative to the top left of the button
@@ -251,7 +248,7 @@ class _SSideMenuState extends State<SSideMenu> {
           child: AnimatedContainer(
             decoration: BoxDecoration(
                 color: widget.style?.backgroundColor ??
-                    Theme.of(context).colorScheme.onBackground,
+                    Theme.of(context).colorScheme.background,
                 borderRadius: widget.style?.borderRadius),
             padding: widget.style?.padding ??
                 const EdgeInsets.symmetric(horizontal: 5),
@@ -345,7 +342,6 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
   final void Function(T value, int index)? onChange;
 
   /// list of DropdownItems
-
   final SDropdownMenuStyle? style;
 
   /// dropdown button icon defaults to caret
@@ -358,6 +354,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
   //
   final bool? showSelected;
   final bool? isSmall;
+  final bool? autoIsSmall;
 
   const SDropdownMenu({
     Key? key,
@@ -373,6 +370,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
     this.footer,
     this.showSelected,
     this.isSmall,
+    this.autoIsSmall,
   }) : super(key: key);
 
   @override
@@ -382,7 +380,6 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
 class SDropdownMenuState<T extends SDropdownMenu> extends State<T> {
   int selectedIndex = 0;
   SMenuController controller = SMenuController(startSize: 50);
-
   Offset topLeftPositionCalculation(
       Size buttonSize, Size popupSize, Offset offset) {
     return Offset(
@@ -566,6 +563,7 @@ class _SDropdownMenuCascadeState<T>
   void _openMenu() {
     _overlayEntry = _createOverlayEntry();
     Overlay.of(context).insert(_overlayEntry!);
+    print('Pushed');
     setState(() => controller.state.value = SMenuState.open);
     _animationController!.forward();
   }
@@ -617,7 +615,6 @@ class _SDropdownMenuCascadeState<T>
   @override
   void dispose() {
     _animationController?.dispose();
-
     _overlayEntry?.remove();
     _overlayEntry?.dispose();
     super.dispose();
@@ -626,7 +623,6 @@ class _SDropdownMenuCascadeState<T>
   @override
   Widget build(BuildContext context) {
     var style = widget.buttonStyle;
-
     // must change this class so width is reflected in controller size
     controller.size.value = 50;
 
@@ -639,7 +635,7 @@ class _SDropdownMenuCascadeState<T>
         style: OutlinedButton.styleFrom(
           padding: style?.padding ?? const EdgeInsets.all(0),
           backgroundColor:
-              style?.bgColor ?? Theme.of(context).colorScheme.onBackground,
+              style?.bgColor ?? Theme.of(context).colorScheme.background,
           elevation: style?.elevation,
           foregroundColor: style?.accentColor,
           shape: style?.shape ??
@@ -705,7 +701,7 @@ class _SDropdownMenuCascadeState<T>
                   borderRadius:
                       widget.style?.borderRadius ?? BorderRadius.circular(15),
                   color: widget.style?.color ??
-                      Theme.of(context).colorScheme.onBackground,
+                      Theme.of(context).colorScheme.background,
                   child: SizeTransition(
                     axisAlignment: 1,
                     sizeFactor: _expandAnimation!,
@@ -877,7 +873,7 @@ class _SDropdownMenuMorphState<T>
             style: OutlinedButton.styleFrom(
               padding: widget.itemStyle?.padding ?? const EdgeInsets.all(0),
               backgroundColor: widget.itemStyle?.bgColor ??
-                  Theme.of(context).colorScheme.onBackground,
+                  Theme.of(context).colorScheme.background,
               elevation: widget.itemStyle?.elevation,
               foregroundColor: widget.itemStyle?.accentColor,
               shape: widget.itemStyle?.shape ??
