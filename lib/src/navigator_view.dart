@@ -20,10 +20,19 @@ class _NavigatorViewState extends State<NavigatorView> {
       body: Row(
         children: [
           SSideMenu(
+              enableSelector: true,
+              style: SSideMenuStyle(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+              ),
               controller: _menuController,
+              footer: TextButton(
+                child: Icon(Icons.menu_open),
+                onPressed: () => _menuController.toggle(),
+              ),
               header: Icon(Icons.fluorescent_sharp),
               items: [
                 SMenuItemButton(
+                  style: SMenuItemStyle(),
                   title: 'Exercise Bank',
                   isSelected: selectedIndex == 0,
                   icon: Icons.home,
@@ -63,6 +72,9 @@ class _NavigatorViewState extends State<NavigatorView> {
             ),
           ),
           SSideMenu(
+            style: SSideMenuStyle(
+              position: SSideMenuPosition.right,
+            ),
             items: [],
             header: Text('Custom view'),
             enableSelector: false,
