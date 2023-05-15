@@ -1,9 +1,11 @@
+import 'package:fitnessplus/src/diet_planner/diet_planner_view.dart';
+import 'package:fitnessplus/src/workout_builder/workout_builder_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'exercise_bank/sample_item_details_view.dart';
-import 'exercise_bank/sample_item_list_view.dart';
+import 'exercise_bank/exercise_details_view.dart';
+import 'exercise_bank/exercise_bank_view.dart';
 import 'menu/routes.dart';
 import 'navigator_view.dart';
 import 'settings/settings_controller.dart';
@@ -11,12 +13,15 @@ import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class MyApp extends StatelessWidget {
-  const MyApp({
+  MyApp({
     super.key,
     required this.settingsController,
   });
 
   final SettingsController settingsController;
+
+  final RouteObserver<ModalRoute<void>> routeObserver =
+      RouteObserver<ModalRoute<void>>();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +70,8 @@ class MyApp extends StatelessWidget {
           themeMode: settingsController.themeMode,
           debugShowCheckedModeBanner: false,
           // Builder to keep a menu persistent over pages
+          navigatorObservers: [routeObserver],
+          navigatorKey: NavUtils.navigatorStateKey,
           builder: (context, child) {
             return Overlay(
               initialEntries: [
@@ -79,23 +86,54 @@ class MyApp extends StatelessWidget {
           // Define a function to handle named routes in order to support
           // Flutter web url navigation and deep linking.
           onGenerateRoute: (RouteSettings routeSettings) {
-            return SlidePageRoute<void>(
-              direction: SlideDirection.left,
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                final uri = Uri.parse(routeSettings.name!);
-                final currentPath = uri.path;
-                switch (currentPath) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
-                  default:
-                    return const SampleItemListView();
-                }
-              },
-            );
+            // If diet, workout, or list view,
+            // Then do a fade transition
+            // Otherwise, a slide transition
+            final uri = Uri.parse(routeSettings.name!);
+            final currentPath = uri.path;
+            if (currentPath == DietPlannerView.routeName ||
+                currentPath == WorkoutBuilderView.routeName ||
+                currentPath == SampleItemListView.routeName) {
+              return FadePageRoute<void>(
+                settings: routeSettings,
+                builder: (BuildContext context) {
+                  switch (currentPath) {
+                    case DietPlannerView.routeName:
+                      return DietPlannerView(
+                        routeObserver: routeObserver,
+                      );
+                    case WorkoutBuilderView.routeName:
+                      return WorkoutBuilderView(
+                        routeObserver: routeObserver,
+                      );
+                    case SampleItemListView.routeName:
+                    default:
+                      return SampleItemListView(
+                        routeObserver: routeObserver,
+                      );
+                  }
+                },
+              );
+            } else {
+              return SlidePageRoute<void>(
+                direction: SlideDirection.left,
+                settings: routeSettings,
+                builder: (BuildContext context) {
+                  switch (currentPath) {
+                    case SampleItemDetailsView.routeName:
+                      return SampleItemDetailsView(
+                        routeObserver: routeObserver,
+                      );
+                    case SettingsView.routeName:
+                    default:
+                      return SettingsView(
+                        controller: settingsController,
+                        routeObserver: routeObserver,
+                      );
+                  }
+                },
+              );
+            }
           },
         );
       },
