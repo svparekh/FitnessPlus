@@ -55,119 +55,152 @@ class _SampleItemListViewState extends State<SampleItemListView>
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints:
-          BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+      // Padding to push whole page in by 35 all around
+      // padding: EdgeInsets.all(35),
       color: Theme.of(context).colorScheme.onPrimary,
-      padding: EdgeInsets.all(35),
       child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: ListView(
-          children: [
-            AppBar(
-              elevation: 0,
-              foregroundColor: Colors.black,
-              backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              title: const Text('Sample Items'),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.settings),
-                  onPressed: () {
-                    // Navigate to the settings page. If the user leaves and returns
-                    // to the app after it has been killed while running in the
-                    // background, the navigation stack is restored.
-                    Navigator.restorablePushNamed(
-                        context, SettingsView.routeName);
-                  },
-                ),
-                SDropdownMenuMorph(child: Text('HI'), items: [
-                  SMenuItemDropdown(
-                    title: Text('data'),
-                    value: 'data',
-                  ),
-                ]),
-              ],
-            ),
-            ListTile(
-              title: SizedBox(
-                height: 150,
-                child: Container(
-                    child: Padding(
-                  padding: EdgeInsets.only(top: 25),
-                  child: Text(
-                    'Exercise Bank',
-                    style: TextStyle(fontSize: 50),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-              ),
-            ),
-            // Header
-            ListTile(
-              title: SizedBox(
-                height: 35,
-                child: Container(
-                    child: Padding(
-                  padding: EdgeInsets.all(25),
-                  child: Text(
-                    'Exercise Bank',
-                    style: TextStyle(fontSize: 14, color: Colors.black),
-                    textAlign: TextAlign.center,
-                  ),
-                )),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: MediaQuery.of(context).size.width ~/ 300),
-                // Providing a restorationId allows the ListView to restore the
-                // scroll position when a user leaves and returns to the app after it
-                // has been killed while running in the background.
-                restorationId: 'sampleItemListView',
-                itemCount: widget.items.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = widget.items[index];
+        // height: MediaQuery.of(context).size.height,
+        child: CustomScrollView(
+          // ListView
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.start,
+          // primary: true,
+          // padding: EdgeInsets.all(35),
+          slivers: [
+            // Title
+            buildAppbar(context),
 
-                  return SizedBox(
-                    width: MediaQuery.of(context).size.width / 250,
-                    height: MediaQuery.of(context).size.width / 250,
-                    child: TextButton(
-                      onPressed: () {
-                        // Navigate to the details page. If the user leaves and returns to
-                        // the app after it has been killed while running in the
-                        // background, the navigation stack is restored.
-                        Navigator.restorablePushNamed(
-                            context, SampleItemDetailsView.routeName);
-                      },
-                      child: Stack(
-                        children: [
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const CircleAvatar(
-                                  // Display the Flutter Logo image asset.
-                                  foregroundImage: AssetImage(
-                                    'assets/images/3.0x/flutter_logo.png',
-                                  ),
-                                ),
-                                Text(item.name ?? 'Exercise Item'),
-                                Text(
-                                  item.description ?? 'Description',
-                                  style: TextStyle(fontSize: 10),
-                                ),
-                              ]),
-                          Icon(Icons.wind_power)
-                        ],
+            // Content
+            SliverFillRemaining(
+              child: Expanded(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 35),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withBlue(245)
+                          .withGreen(245)
+                          .withRed(245),
+                      borderRadius: BorderRadius.circular(15)),
+                  child: Column(
+                    children: [
+                      // List of data
+                      Expanded(
+                        child: buildGrid(context),
                       ),
-                    ),
-                  );
-                },
+                    ],
+                  ),
+                ),
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  SliverAppBar buildAppbar(BuildContext context) {
+    return SliverAppBar(
+      primary: true,
+      bottom: PreferredSize(
+          preferredSize: const Size(100, 25),
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 35),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: const Color.fromARGB(255, 216, 216, 216),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  'Exercise Bank',
+                  style: TextStyle(fontSize: 14, color: Colors.black),
+                  textAlign: TextAlign.center,
+                ),
+                SDropdownMenuMorph(items: [
+                  SMenuItemDropdown(
+                    title: Text('data'),
+                    value: 'data',
+                  ),
+                ], child: Text('HI'))
+              ],
+            ),
+          )),
+      pinned: true,
+      expandedHeight: 350,
+      elevation: 0,
+      foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
+      backgroundColor: Theme.of(context).colorScheme.onPrimary,
+      flexibleSpace: const FlexibleSpaceBar(
+        expandedTitleScale: 1.15,
+        background: Center(
+          child: Text(
+            'Exercise Bank',
+            style: TextStyle(fontSize: 50),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () {
+            // Navigate to the settings page. If the user leaves and returns
+            // to the app after it has been killed while running in the
+            // background, the navigation stack is restored.
+            Navigator.restorablePushNamed(context, SettingsView.routeName);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildGrid(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: MediaQuery.of(context).size.width ~/ 300),
+      // Providing a restorationId allows the ListView to restore the
+      // scroll position when a user leaves and returns to the app after it
+      // has been killed while running in the background.
+      restorationId: 'sampleItemListView',
+      itemCount: widget.items.length,
+      itemBuilder: (BuildContext context, int index) {
+        final item = widget.items[index];
+
+        return SizedBox(
+          width: MediaQuery.of(context).size.width / 250,
+          height: MediaQuery.of(context).size.width / 250,
+          child: TextButton(
+            onPressed: () {
+              // Navigate to the details page. If the user leaves and returns to
+              // the app after it has been killed while running in the
+              // background, the navigation stack is restored.
+              Navigator.restorablePushNamed(
+                  context, SampleItemDetailsView.routeName);
+            },
+            child: Stack(
+              children: [
+                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  const CircleAvatar(
+                    // Display the Flutter Logo image asset.
+                    foregroundImage: AssetImage(
+                      'assets/images/3.0x/flutter_logo.png',
+                    ),
+                  ),
+                  Text(item.name ?? 'Exercise Item'),
+                  Text(
+                    item.description ?? 'Description',
+                    style: const TextStyle(fontSize: 10),
+                  ),
+                ]),
+                const Icon(Icons.wind_power)
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
