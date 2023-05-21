@@ -345,7 +345,7 @@ abstract class SDropdownMenu<T> extends StatefulWidget {
   final SDropdownMenuStyle? style;
 
   /// dropdown button icon defaults to caret
-  final Icon? icon;
+  final Widget? icon;
   final bool? hideIcon;
 
   /// if true the dropdown icon will as a leading icon, default to false
@@ -521,7 +521,7 @@ class SDropdownMenuCascade<T> extends SDropdownMenu<T> {
     final Widget? child,
     required List<SMenuItem<T>> items,
     final SDropdownMenuStyle? style = const SDropdownMenuStyle(),
-    final Icon? icon,
+    final Widget? icon,
     final bool? leadingIcon = false,
     final void Function(dynamic, int)? onChange,
     final SMenuController? controller,
@@ -746,10 +746,10 @@ class SDropdownMenuMorph<T> extends SDropdownMenu<T> {
     this.itemStyle,
     final Key? key,
     final bool? hideIcon = false,
-    required Widget child,
+    final Widget? child,
     required List<SMenuItem<T>> items,
     final SDropdownMenuStyle? style = const SDropdownMenuStyle(),
-    final Icon? icon,
+    final Widget? icon,
     final bool? leadingIcon = false,
     final void Function(dynamic, int)? onChange,
     final SMenuController? controller,
@@ -895,14 +895,14 @@ class _SDropdownMenuMorphState<T>
               children: [
                 if ((_currentIndex == -1) && (widget.child != null)) ...[
                   Flexible(child: widget.child!),
-                ] else ...[
+                ] else if (_currentIndex > -1) ...[
                   Flexible(child: widget.items[_currentIndex]),
                 ],
                 if (widget.hideIcon != null && !widget.hideIcon!)
                   Flexible(
                     child: RotationTransition(
                       turns: _rotateAnimation!,
-                      child: widget.icon ?? const Icon(Icons.abc),
+                      child: widget.icon ?? const Icon(Icons.arrow_drop_down),
                     ),
                   ),
               ],

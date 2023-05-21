@@ -64,9 +64,20 @@ class MyApp extends StatelessWidget {
           // preferred ThemeMode (light, dark, or system default) from the
           // SettingsController to display the correct theme.
           theme: ThemeData(
-              colorScheme: ColorScheme.light(
-                  background: Colors.white, primary: Colors.blue)),
-          darkTheme: ThemeData.dark().copyWith(colorScheme: ColorScheme.dark()),
+            colorScheme: const ColorScheme.light(
+              background: Colors.white,
+              primary: Colors.blue,
+            ),
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+          ),
+          darkTheme: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(),
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            hoverColor: Colors.transparent,
+          ),
           themeMode: settingsController.themeMode,
           debugShowCheckedModeBanner: false,
           // Builder to keep a menu persistent over pages
